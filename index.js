@@ -1,8 +1,9 @@
 const express = require("express");
+const config = require("./config")
 const tweetsRouter =  require("./routes/tweetsRouter");
 
 const app = express();
-const port = 3000;
+const port = config.port;
 
 // Implementing Express MiddleWare to interprete json format if header Content-Type is json
 app.use(express.json());
