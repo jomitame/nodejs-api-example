@@ -5,6 +5,7 @@ const tweetsService = require("../services/tweetsService");
 
 const statusOK = 200;
 const statusCreatedOk = 201;
+const statusNotFound = 400;
 const statusError = 500;
 
 module.exports = router;
@@ -22,7 +23,11 @@ async function getTweet(req, res) {
     try {
         const { tweetId } = req.params;
         const tweet = await tweetsService.getTweet(tweetId);
-        res.status(statusOK).json(tweet);
+        if (typeof tweet !== 'undefined') {
+            res.status(statusOK).json(tweet);
+        } else {
+            res.status(statusNotFound).json({ error: 'Tweet not found' });
+        }        
     } catch (error) {
         res.status(statusError).json({ error: error.message });
     }
