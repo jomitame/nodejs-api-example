@@ -5,7 +5,7 @@ const tweetsService = require("../services/tweetsService");
 
 const statusOK = 200;
 const statusCreatedOk = 201;
-const statusDeletedOk = 202;
+const statusAcepted = 202;
 const statusNotFound = 404;
 const statusError = 500;
 
@@ -44,12 +44,28 @@ async function createTweet(req, res) {
     }
 }
 
+async function updateTweet(req, res) {
+    try {
+        const { tweetId } = req.params;
+        const { content } = req.body;
+        const updatedRows = await tweetsService.updateTweet(tweetId, content);
+        if (updatedRows > 0) {
+            res.status(statusAcepted).json({ message: "Tweet Updated."});
+        } else {
+            res.status(statusNotFound).json({ error: 'Tweet not found' });
+        }
+        
+    } catch (error) {
+        res.status(statusError).json({ error: error.message });
+    }
+}
+
 async function deleteTweet(req, res) {
     try {
         const { tweetId } = req.params;
         const deletedRows = await tweetsService.deleteTweet(tweetId);
         if (deletedRows > 0) {
-            res.status(statusDeletedOk).json({ message: "Tweet deleted"});
+            res.status(statusAcepted).json({ message: "Tweet deleted"});
         } else {
             res.status(statusNotFound).json({ message: 'Tweet not found' });
         }
@@ -61,4 +77,5 @@ async function deleteTweet(req, res) {
 router.get("/", getTweets);
 router.get("/:tweetId", getTweet);
 router.post("/", createTweet);
+router.patch("/:tweetId", updateTweet);
 router.delete("/:tweetId", deleteTweet);

@@ -39,6 +39,19 @@ async function createTweet(tweet) {
     });
 }
 
+async function updateTweet(tweetId, content) {
+    return new Promise((resolve, reject) => {
+        const sqlQuery = "UPDATE tweets SET content = ? WHERE tweetId = ?";
+        connection.query(sqlQuery, [content, tweetId], (error, results) => {
+            if (error){
+                reject(error);
+            } else {
+                resolve(results.affectedRows);
+            }
+        });
+    });
+}
+
 async function deleteTweet(tweetId) {
     return new Promise((resolve, reject) => {
         const sqlQuery = "DELETE FROM tweets WHERE tweetId = ?";
@@ -56,5 +69,6 @@ module.exports = {
     getTweets,
     getTweet,
     createTweet,
+    updateTweet,
     deleteTweet,
 };
