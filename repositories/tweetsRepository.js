@@ -39,8 +39,22 @@ async function createTweet(tweet) {
     });
 }
 
+async function deleteTweet(tweetId) {
+    return new Promise((resolve, reject) => {
+        const sqlQuery = "DELETE FROM tweets WHERE tweetId = ?";
+        connection.query(sqlQuery, tweetId, (error, results) => {
+            if (error){
+                reject(error);
+            } else {
+                resolve(results.affectedRows);
+            }
+        });
+    });
+}
+
 module.exports = {
     getTweets,
     getTweet,
     createTweet,
+    deleteTweet,
 };

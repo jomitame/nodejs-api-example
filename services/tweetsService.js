@@ -12,8 +12,13 @@ async function createTweet(tweet) {
     return await tweetsRepository.createTweet(tweet);
 }
 
+async function deleteTweet(tweetId) {
+    return await tweetsRepository.deleteTweet(tweetId);
+}
+
 module.exports = {
     getTweets,
     getTweet,
     createTweet,
+    deleteTweet,
 };
