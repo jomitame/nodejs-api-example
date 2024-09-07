@@ -7,7 +7,20 @@ async function getTweets() {
             if (error){
                 reject(error);
             } else {
-                resolve(results)
+                resolve(results);
+            }
+        });
+    });
+}
+
+async function createTweet(tweet) {
+    return new Promise((resolve, reject) => {
+        const sqlQuery = "INSERT INTO tweets SET ?";
+        connection.query(sqlQuery, tweet, (error, results) => {
+            if (error){
+                reject(error);
+            } else {
+                resolve({ tweetId: results.insertId, ...tweet });
             }
         });
     });
@@ -15,4 +28,5 @@ async function getTweets() {
 
 module.exports = {
     getTweets,
+    createTweet,
 };
