@@ -11,12 +11,14 @@ const statusError = 500;
 
 module.exports = router;
 
-async function getTweets(req, res) {
+async function getTweets(req, res, next) {
     try {
+        throw new Error("This is an error from the tweet router");
         const tweets = await tweetsService.getTweets();
         res.status(statusOK).json(tweets);
     } catch (error) {
-        res.status(statusError).json({ error: error.message });
+        // res.status(statusError).json({ error: error.message });
+        next(error);
     }
 }
 
