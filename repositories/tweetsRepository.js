@@ -13,6 +13,19 @@ async function getTweets() {
     });
 }
 
+async function getTweet(tweetId) {
+    return new Promise((resolve, reject) => {
+        const sqlQuery = "SELECT * FROM tweets WHERE tweetId = ?";
+        connection.query(sqlQuery, tweetId, (error, results) => {
+            if (error){
+                reject(error);
+            } else {
+                resolve(results[0]);
+            }
+        });
+    });
+}
+
 async function createTweet(tweet) {
     return new Promise((resolve, reject) => {
         const sqlQuery = "INSERT INTO tweets SET ?";
@@ -28,5 +41,6 @@ async function createTweet(tweet) {
 
 module.exports = {
     getTweets,
+    getTweet,
     createTweet,
 };

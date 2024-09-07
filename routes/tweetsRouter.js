@@ -18,6 +18,16 @@ async function getTweets(req, res) {
     }
 }
 
+async function getTweet(req, res) {
+    try {
+        const { tweetId } = req.params;
+        const tweet = await tweetsService.getTweet(tweetId);
+        res.status(statusOK).json(tweet);
+    } catch (error) {
+        res.status(statusError).json({ error: error.message });
+    }
+}
+
 async function createTweet(req, res) {
     try {
         const tweet = req.body;
@@ -29,4 +39,5 @@ async function createTweet(req, res) {
 }
 
 router.get("/", getTweets);
+router.get("/:tweetId", getTweet);
 router.post("/", createTweet);
