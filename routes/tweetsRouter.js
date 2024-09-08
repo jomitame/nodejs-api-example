@@ -3,8 +3,8 @@ const router = express.Router();
 
 const tweetsService = require("../services/tweetsService");
 
-const validate = require("../utils/validate");
-const { createTweetSchema } = require("../utils/schemas/tweetsSchema");
+const validation = require("../utils/middlewares/createValidationMiddleware");
+const { createTweetSchema, tweetIdSchema, updateTweetSchema } = require("../utils/schemas/tweetsSchema");
 
 const statusOK = 200;
 const statusCreatedOk = 201;
@@ -43,13 +43,13 @@ async function getTweet(req, res) {
 async function createTweet(req, res, next) {
     try {
         const tweet = req.body;
-        const validationError = validate(tweet, createTweetSchema);
+        // const validationError = validate(tweet, createTweetSchema);
 
-        if(validationError) {
-            return res
-            .status(statusBadRequest)
-            .json({ error: validationError.details[0].message });
-        }
+        // if(validationError) {
+        //     return res
+        //     .status(statusBadRequest)
+        //     .json({ error: validationError.details[0].message });
+        // }
 
         const result = await tweetsService.createTweet(tweet);
         res.status(statusCreatedOk).json(result);
@@ -90,7 +90,12 @@ async function deleteTweet(req, res) {
 }
 
 router.get("/", getTweets);
-router.get("/:tweetId", getTweet);
-router.post("/", createTweet);
-router.patch("/:tweetId", updateTweet);
-router.delete("/:tweetId", deleteTweet);
+router.get("/:tweetId", validation({ params: tweetIdSchema }), getTweet);
+router.post("/", validation({ body: createTweetSchema }), createTweet);
+router.patch(
+    "/:tweetId",
+    validation({ params: tweetIdSchema }),
+    validation({ body: updateTweetSchema }),
+    updateTweet
+);
+router.delete("/:tweetId", validation({ params: tweetIdSchema }), deleteTweet);
