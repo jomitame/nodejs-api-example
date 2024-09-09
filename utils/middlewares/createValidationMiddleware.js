@@ -1,3 +1,4 @@
+const boom = require("@hapi/boom");
 const validate = require("../validate");
 
 
@@ -15,7 +16,7 @@ function createValidationMiddleware(validationSchema) {
 
     return function validationMiddleware(req, res, next) {
         const error = validate(req[payloadKey], joiSchema);
-        error ? next(error) : next();
+        error ? next(boom.badRequest(error)) : next();
     };
 }
 

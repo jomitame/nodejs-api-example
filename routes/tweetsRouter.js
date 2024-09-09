@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const boom = require('@hapi/boom');
 
 const tweetsService = require("../services/tweetsService");
 
@@ -26,17 +27,20 @@ async function getTweets(req, res, next) {
     }
 }
 
-async function getTweet(req, res) {
+async function getTweet(req, res, next) {
     try {
         const { tweetId } = req.params;
         const tweet = await tweetsService.getTweet(tweetId);
         if (typeof tweet !== 'undefined') {
             res.status(statusOK).json(tweet);
         } else {
-            res.status(statusNotFound).json({ error: 'Tweet not found' });
+            const { output: { statusCode, payload }} = boom.notFound();
+            payload.message = "Tweet not found";
+            res.status(statusCode).json(payload);
         }        
     } catch (error) {
-        res.status(statusError).json({ error: error.message });
+        //res.status(statusError).json({ error: error.message });
+        next(error);
     }
 }
 
@@ -59,7 +63,7 @@ async function createTweet(req, res, next) {
     }
 }
 
-async function updateTweet(req, res) {
+async function updateTweet(req, res, next) {
     try {
         const { tweetId } = req.params;
         const { content } = req.body;
@@ -71,11 +75,12 @@ async function updateTweet(req, res) {
         }
         
     } catch (error) {
-        res.status(statusError).json({ error: error.message });
+        //res.status(statusError).json({ error: error.message });
+        next(error);
     }
 }
 
-async function deleteTweet(req, res) {
+async function deleteTweet(req, res, next) {
     try {
         const { tweetId } = req.params;
         const deletedRows = await tweetsService.deleteTweet(tweetId);
@@ -85,7 +90,8 @@ async function deleteTweet(req, res) {
             res.status(statusNotFound).json({ message: 'Tweet not found' });
         }
     } catch (error) {
-        res.status(statusError).json({ error: error.message });
+        //res.status(statusError).json({ error: error.message });
+        next(error);
     }
 }
 
