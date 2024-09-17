@@ -26,4 +26,4 @@ describe("[ utils / withErrorStack ]", () => {
         // Assert
         expect(result).toEqual(expected);
     });
-})
+});
