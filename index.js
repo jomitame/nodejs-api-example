@@ -15,7 +15,8 @@ const port = config.port;
 app.use(express.json());
 
 // Routes Middlewares
-app.use("/tweets", tweetsRouter);
+//app.use("/tweets", tweetsRouter);
+tweetsRouter(app);
 
 // Catch 404
 app.use(notFound);

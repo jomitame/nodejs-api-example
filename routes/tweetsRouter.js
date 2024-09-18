@@ -14,7 +14,7 @@ const statusBadRequest = 400;
 const statusNotFound = 404;
 const statusError = 500;
 
-module.exports = router;
+module.exports = app => app.use("/tweets", router);
 
 async function getTweets(req, res, next) {
     try {
